@@ -49,9 +49,7 @@ DeferredBT::tick()
       }
     }
     plugins_ = getInput<std::vector<std::string>>("plugins");
-    // if (!plugins_) {
-    //   throw BT::RuntimeError("Missing required input [plugins]");
-    // }
+
     BT::BehaviorTreeFactory factory;
     BT::SharedLibrary loader;
 
@@ -59,12 +57,15 @@ DeferredBT::tick()
       for (const auto & plugin : plugins_.value()) {
         factory.registerFromPlugin(loader.getOSName(plugin));
       }
+    } else {
+      std::cerr << "[DeferredBT] WARNING: No plugins provided" << std::endl;
     }
     if (by_content) {
       subtree_ = factory.createTreeFromText(bt_xml_.value(), config().blackboard);
     } else {
-      std::string pkg_path = ament_index_cpp::get_package_share_directory(bt_pkg_.value());
-      std::string xml_path = pkg_path + "/" + rel_path_.value();
+      std::string xml_path =
+        ament_index_cpp::get_package_share_directory(bt_pkg_.value()) +
+        "/" + rel_path_.value();
       subtree_ = factory.createTreeFromFile(xml_path, config().blackboard);
     }
 

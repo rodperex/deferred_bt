@@ -35,7 +35,6 @@ public:
   void halt();
   BT::NodeStatus tick();
 
-
   static BT::PortsList providedPorts()
   {
     return BT::PortsList(
@@ -44,7 +43,6 @@ public:
         BT::InputPort<std::string>("rel_path"), // relative path to the XML
         BT::InputPort<std::string>("xml"), // XML corresponding to the BT to be executed
         BT::InputPort<std::vector<std::string>>("plugins"), // plugins to load
-
       });
   }
 
@@ -54,6 +52,6 @@ private:
   BT::Tree subtree_;
 };
 
-}  // namespace head
+}  // namespace deferred_bt
 
 #endif  // DEFERRED__BT_HPP_

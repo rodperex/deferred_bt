@@ -42,8 +42,9 @@ SetupTest::tick()
     setOutput("pkg", "deferred_bt");
     setOutput("rel_path", "/bt_xml_test/dummy.xml");
   } else {
-    std::string pkg_path = ament_index_cpp::get_package_share_directory("deferred_bt");
-    std::string xml_path = pkg_path + "/bt_xml_test/dummy.xml";
+    std::string xml_path =
+      ament_index_cpp::get_package_share_directory("deferred_bt") +
+      "/bt_xml_test/dummy.xml";
     std::ifstream file(xml_path);
     std::ostringstream contents_stream;
     contents_stream << file.rdbuf();
