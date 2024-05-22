@@ -44,6 +44,7 @@ install(TARGETS
   ${plugin_libs}
   test_content
   test_path
+  EXPORT ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
@@ -62,4 +63,5 @@ endif()
 
 ament_export_include_directories(include)
 ament_export_dependencies(${dependencies})
+ament_export_targets(${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_package()
