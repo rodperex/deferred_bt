@@ -3,8 +3,8 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
-            <Action ID="SetupTest" bt_xml="{xml}" plugins="{plugins}"/>
-            <Action ID="DeferredBT" plugins="{plugins}" xml="{xml}"/>
+            <Action ID="SetupTest" bt_type="path" bt_xml="" pkg="{pkg}" plugins="{plugins}" rel_path="{path}"/>
+            <Action ID="DeferredBT" bt_pkg="{pkg}" plugins="{plugins}" rel_path="{path}" xml=""/>
             <Action ID="AfterTest" test_value="{val}"/>
         </Sequence>
     </BehaviorTree>
@@ -14,12 +14,17 @@
             <input_port name="test_value">test value</input_port>
         </Action>
         <Action ID="DeferredBT">
+            <input_port name="bt_pkg">Package where the XML is located</input_port>
             <input_port name="plugins">plugins to load</input_port>
+            <input_port name="rel_path">Relative path to the BT file</input_port>
             <input_port name="xml">XML corresponding to the BT to be executed</input_port>
         </Action>
         <Action ID="SetupTest">
-            <output_port name="bt_xml">bt to be executed</output_port>
+            <input_port default="content" name="bt_type">path/content</input_port>
+            <output_port name="bt_xml">BT to be executed (bt_type=content)</output_port>
+            <output_port name="pkg">Package where the BT file is located (bt_type=path)</output_port>
             <output_port name="plugins">necessary plugins</output_port>
+            <output_port name="rel_path">Relative path to the BT file (bt_type=path)</output_port>
         </Action>
     </TreeNodesModel>
     <!-- ////////// -->

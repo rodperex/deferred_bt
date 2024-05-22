@@ -20,6 +20,7 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "behaviortree_cpp_v3/utils/shared_library.h"
+#include "ament_index_cpp/get_package_share_directory.hpp"
 
 namespace deferred_bt
 {
@@ -39,13 +40,16 @@ public:
   {
     return BT::PortsList(
       {
+        BT::InputPort<std::string>("bt_pkg"), // package where the XML is located
+        BT::InputPort<std::string>("rel_path"), // relative path to the XML
         BT::InputPort<std::string>("xml"), // XML corresponding to the BT to be executed
         BT::InputPort<std::vector<std::string>>("plugins"), // plugins to load
+
       });
   }
 
 private:
-  BT::Optional<std::string> bt_xml_;
+  BT::Optional<std::string> bt_xml_, bt_pkg_, rel_path_;
   BT::Optional<std::vector<std::string>> plugins_;
   BT::Tree subtree_;
 };

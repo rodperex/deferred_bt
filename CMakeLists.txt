@@ -35,12 +35,15 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
-add_executable(test_defer src/test/test_main.cpp)
-ament_target_dependencies(test_defer ${dependencies})
+add_executable(test_content src/test/test_main_content.cpp)
+ament_target_dependencies(test_content ${dependencies})
+add_executable(test_path src/test/test_main_path.cpp)
+ament_target_dependencies(test_path ${dependencies})
 
 install(TARGETS
   ${plugin_libs}
-  test_defer
+  test_content
+  test_path
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

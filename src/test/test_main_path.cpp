@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
   factory.registerFromPlugin(loader.getOSName("after_test_bt_node"));
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("deferred_bt");
-  std::string xml_file = pkgpath + "/bt_xml_test/defer_test.xml";
+  std::string xml_file = pkgpath + "/bt_xml_test/defer_test_path.xml";
 
   auto blackboard = BT::Blackboard::create();
   blackboard->set("node", node);

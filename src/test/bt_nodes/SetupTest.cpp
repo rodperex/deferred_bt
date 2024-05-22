@@ -33,17 +33,26 @@ SetupTest::halt()
 BT::NodeStatus
 SetupTest::tick()
 {
-  std::string pkg_path = ament_index_cpp::get_package_share_directory("deferred_bt");
-  std::string xml_path = pkg_path + "/bt_xml_test/dummy.xml";
-  std::ifstream file(xml_path);
-  std::ostringstream contents_stream;
-  contents_stream << file.rdbuf();
 
-  setOutput("bt_xml", contents_stream.str());
+  if (status() == BT::NodeStatus::IDLE) {
+    getInput<std::string>("bt_type", transfer_type_);
+  }
+
+  if (transfer_type_ == "path") {
+    setOutput("pkg", "deferred_bt");
+    setOutput("rel_path", "/bt_xml_test/dummy.xml");
+  } else {
+    std::string pkg_path = ament_index_cpp::get_package_share_directory("deferred_bt");
+    std::string xml_path = pkg_path + "/bt_xml_test/dummy.xml";
+    std::ifstream file(xml_path);
+    std::ostringstream contents_stream;
+    contents_stream << file.rdbuf();
+
+    setOutput("bt_xml", contents_stream.str());
+  }
 
   std::vector<std::string> plugins;
   plugins.push_back("set_value_bt_node");
-
   setOutput("plugins", plugins);
 
   return BT::NodeStatus::SUCCESS;

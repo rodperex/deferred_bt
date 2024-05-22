@@ -34,17 +34,24 @@ DeferredBT::halt()
 BT::NodeStatus
 DeferredBT::tick()
 {
-  bt_xml_ = getInput<std::string>("xml");
-  plugins_ = getInput<std::vector<std::string>>("plugins");
-
-  if (!bt_xml_) {
-    throw BT::RuntimeError("Missing required input [xml]");
-  }
-  // if (!plugins_) {
-  //   throw BT::RuntimeError("Missing required input [plugins]");
-  // }
-
   if (status() == BT::NodeStatus::IDLE) {
+    bool by_content = true;
+    bt_xml_ = getInput<std::string>("xml");
+    if (!bt_xml_ || bt_xml_.value().empty()) {
+      by_content = false;
+      bt_pkg_ = getInput<std::string>("bt_pkg");
+      if (!bt_pkg_ || bt_pkg_.value().empty()) {
+        throw BT::RuntimeError("Missing required input [xml]/[bt_pkg]");
+      }
+      rel_path_ = getInput<std::string>("rel_path");
+      if (!rel_path_ || rel_path_.value().empty()) {
+        throw BT::RuntimeError("Missing required input [rel_path]");
+      }
+    }
+    plugins_ = getInput<std::vector<std::string>>("plugins");
+    // if (!plugins_) {
+    //   throw BT::RuntimeError("Missing required input [plugins]");
+    // }
     BT::BehaviorTreeFactory factory;
     BT::SharedLibrary loader;
 
@@ -53,8 +60,14 @@ DeferredBT::tick()
         factory.registerFromPlugin(loader.getOSName(plugin));
       }
     }
+    if (by_content) {
+      subtree_ = factory.createTreeFromText(bt_xml_.value(), config().blackboard);
+    } else {
+      std::string pkg_path = ament_index_cpp::get_package_share_directory(bt_pkg_.value());
+      std::string xml_path = pkg_path + "/" + rel_path_.value();
+      subtree_ = factory.createTreeFromFile(xml_path, config().blackboard);
+    }
 
-    subtree_ = factory.createTreeFromText(bt_xml_.value(), config().blackboard);
   }
 
   return subtree_.rootNode()->executeTick();

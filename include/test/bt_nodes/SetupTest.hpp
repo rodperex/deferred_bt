@@ -40,12 +40,16 @@ public:
   {
     return BT::PortsList(
       {
+        BT::InputPort<int>("bt_type"), // path or content
         BT::OutputPort<std::string>("bt_xml"), // XML corresponding to the BT to be executed
         BT::OutputPort<std::vector<std::string>>("plugins"), // plugins to load
+        BT::OutputPort<std::string>("pkg"), // package where the XML is located
+        BT::OutputPort<std::string>("rel_path") // relative path to the XML
       });
   }
 
 private:
+  std::string transfer_type_, pkg_;
 
 };
 
