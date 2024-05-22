@@ -3,10 +3,25 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
-            <SetBlackboard output_key="test_value" value="37"/>
+            <Action ID="SetValue" value="{val}"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
-    <TreeNodesModel/>
+    <TreeNodesModel>
+        <Action ID="AfterTest">
+            <input_port name="test_value">test value</input_port>
+        </Action>
+        <Action ID="DeferredBT">
+            <input_port name="plugins">plugins to load</input_port>
+            <input_port name="xml">XML corresponding to the BT to be executed</input_port>
+        </Action>
+        <Action ID="SetValue">
+            <output_port default="78" name="value"/>
+        </Action>
+        <Action ID="SetupTest">
+            <output_port name="bt_xml">bt to be executed</output_port>
+            <output_port name="plugins">necessary plugins</output_port>
+        </Action>
+    </TreeNodesModel>
     <!-- ////////// -->
 </root>

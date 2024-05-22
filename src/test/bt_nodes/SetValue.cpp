@@ -12,58 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "deferred_bt/DeferredBT.hpp"
+#include "test/bt_nodes/SetValue.hpp"
 
 
 namespace deferred_bt
 {
 
-DeferredBT::DeferredBT(
+SetValue::SetValue(
   const std::string & xml_tag_name,
   const BT::NodeConfiguration & conf)
 : BT::ActionNodeBase(xml_tag_name, conf)
 {
-
 }
 
 void
-DeferredBT::halt()
+SetValue::halt()
 {
 }
 
 BT::NodeStatus
-DeferredBT::tick()
+SetValue::tick()
 {
-  bt_xml_ = getInput<std::string>("xml");
-  plugins_ = getInput<std::vector<std::string>>("plugins");
+  int val = 42;
+  std::cout << "SetValue: setting output - " << val << std::endl;
+  setOutput("value", val);
 
-  if (!bt_xml_) {
-    throw BT::RuntimeError("Missing required input [xml]");
-  }
-  // if (!plugins_) {
-  //   throw BT::RuntimeError("Missing required input [plugins]");
-  // }
-
-  if (status() == BT::NodeStatus::IDLE) {
-    BT::BehaviorTreeFactory factory;
-    BT::SharedLibrary loader;
-
-    if (plugins_) {
-      for (const auto & plugin : plugins_.value()) {
-        factory.registerFromPlugin(loader.getOSName(plugin));
-      }
-    }
-
-    subtree_ = factory.createTreeFromText(bt_xml_.value(), config().blackboard);
-  }
-
-  return subtree_.rootNode()->executeTick();
-
+  return BT::NodeStatus::SUCCESS;
 }
 
 }  // namespace deferred_bt
 
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<deferred_bt::DeferredBT>("DeferredBT");
+  factory.registerNodeType<deferred_bt::SetValue>("SetValue");
 }

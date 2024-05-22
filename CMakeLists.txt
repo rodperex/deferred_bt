@@ -18,24 +18,38 @@ set(dependencies
 
 include_directories(include)
 
-add_library(${PROJECT_NAME} SHARED
-  src/deferred_bt/DeferredBT.cpp
-)
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
+add_library(deferred_bt_node SHARED src/deferred_bt/DeferredBT.cpp)
+add_library(setup_test_bt_node SHARED src/test/bt_nodes/SetupTest.cpp)
+add_library(after_test_bt_node SHARED src/test/bt_nodes/AfterTest.cpp)
+add_library(set_value_bt_node SHARED src/test/bt_nodes/SetValue.cpp)
 
-# add_executable(XX src/...)
-# ament_target_dependencies(XX ${dependencies})
-# target_link_libraries(XX ${PROJECT_NAME})
+list(APPEND plugin_libs
+  deferred_bt_node
+  setup_test_bt_node
+  after_test_bt_node
+  set_value_bt_node
+)
+
+foreach(bt_plugin ${plugin_libs})
+  ament_target_dependencies(${bt_plugin} ${dependencies})
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
+
+add_executable(test_defer src/test/test_main.cpp)
+ament_target_dependencies(test_defer ${dependencies})
 
 install(TARGETS
-  ${PROJECT_NAME}
-  # XX
+  ${plugin_libs}
+  test_defer
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY
+  bt_xml_test
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -43,5 +57,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_include_directories(include)
 ament_export_dependencies(${dependencies})
 ament_package()

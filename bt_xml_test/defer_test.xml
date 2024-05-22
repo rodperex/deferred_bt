@@ -5,7 +5,7 @@
         <Sequence>
             <Action ID="SetupTest" bt_xml="{xml}" plugins="{plugins}"/>
             <Action ID="DeferredBT" plugins="{plugins}" xml="{xml}"/>
-            <Action ID="AfterTest" test_value=""/>
+            <Action ID="AfterTest" test_value="{val}"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
