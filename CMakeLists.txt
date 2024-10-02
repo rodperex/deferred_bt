@@ -8,12 +8,14 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(behaviortree_cpp_v3 REQUIRED)
 
 set(dependencies
   rclcpp
   behaviortree_cpp_v3
+  ament_index_cpp
 )
 
 include_directories(include)
